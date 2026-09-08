@@ -1,0 +1,9 @@
+Package: com.meowly.26settings
+Name: 26Settings
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: iOS 26-style Settings on older iOS — banners, circular icons & a Liquid Glass pane
+Maintainer: meowly
+Author: meowly
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), preferenceloader, firmware (>= 15.0)
