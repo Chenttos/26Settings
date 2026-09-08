@@ -4,8 +4,14 @@
 <dict>
     <key>entry</key>
     <dict>
+        <key>bundle</key>
+        <string>26SettingsPrefs</string>
         <key>cell</key>
         <string>PSLinkCell</string>
+        <key>detail</key>
+        <string>MLYPrefsRootListController</string>
+        <key>isController</key>
+        <true/>
         <key>label</key>
         <string>26Settings</string>
     </dict>
