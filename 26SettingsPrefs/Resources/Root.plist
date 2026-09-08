@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Tweak</string>
+			<key>footerText</key>
+			<string>Respring after changing these.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>defaults</key>
+			<string>com.meowly.26settings</string>
+			<key>PostNotification</key>
+			<string>com.meowly.26settings.prefschanged</string>
+			<key>label</key>
+			<string>Enabled</string>
+			<key>key</key>
+			<string>enabled</string>
+			<key>default</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>iOS 26 Look</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>defaults</key>
+			<string>com.meowly.26settings</string>
+			<key>PostNotification</key>
+			<string>com.meowly.26settings.prefschanged</string>
+			<key>label</key>
+			<string>Banner card</string>
+			<key>key</key>
+			<string>banner</string>
+			<key>default</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>defaults</key>
+			<string>com.meowly.26settings</string>
+			<key>PostNotification</key>
+			<string>com.meowly.26settings.prefschanged</string>
+			<key>label</key>
+			<string>Card-style backdrop</string>
+			<key>key</key>
+			<string>cardStyle</string>
+			<key>default</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>defaults</key>
+			<string>com.meowly.26settings</string>
+			<key>PostNotification</key>
+			<string>com.meowly.26settings.prefschanged</string>
+			<key>label</key>
+			<string>Circular tinted icons</string>
+			<key>key</key>
+			<string>circularIcons</string>
+			<key>default</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>defaults</key>
+			<string>com.meowly.26settings</string>
+			<key>PostNotification</key>
+			<string>com.meowly.26settings.prefschanged</string>
+			<key>label</key>
+			<string>Liquid Glass pane</string>
+			<key>key</key>
+			<string>glassPane</string>
+			<key>default</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Drop custom glyphs into /var/jb/Library/26Settings/Icons.bundle named after the row identifier.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+			<key>action</key>
+			<string>respring</string>
+		</dict>
+	</array>
+</dict>
+</plist>
