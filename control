@@ -1,6 +1,6 @@
 Package: com.meowly.26settings
 Name: 26Settings
-Version: 1.1.0
+Version: 1.1.1
 Architecture: iphoneos-arm64
 Description: iOS 26-style Settings on older iOS — group cards, squircle icons, glass nav bar, banners & a Liquid Glass pane
 Maintainer: meowly

@@ -30,14 +30,12 @@ extern NSString *const MLYPrefsChangedNotification;
 @property (nonatomic, readonly) BOOL sentenceCaseHeaders;
 @property (nonatomic, readonly) BOOL pillSearchBar;
 @property (nonatomic, readonly) BOOL glassNavigationBar;
-@property (nonatomic, readonly) BOOL circularBackButton;
 @property (nonatomic, readonly) BOOL biggerSwitches;
 
 // Icons
 @property (nonatomic, readonly) BOOL restyleIcons;
 @property (nonatomic, readonly) CGFloat iconSize;
 @property (nonatomic, readonly) CGFloat iconRadius;
-@property (nonatomic, readonly) BOOL glossyIcons;
 @property (nonatomic, readonly) BOOL tintedGlyphs;
 
 // Root pane extras

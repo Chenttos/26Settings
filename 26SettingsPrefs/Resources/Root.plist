@@ -222,20 +222,6 @@
 			<key>PostNotification</key>
 			<string>com.meowly.26settings.prefschanged</string>
 			<key>label</key>
-			<string>Glossy icons</string>
-			<key>key</key>
-			<string>glossyIcons</string>
-			<key>default</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>defaults</key>
-			<string>com.meowly.26settings</string>
-			<key>PostNotification</key>
-			<string>com.meowly.26settings.prefschanged</string>
-			<key>label</key>
 			<string>Clear tinted glyphs</string>
 			<key>key</key>
 			<string>tintedGlyphs</string>
@@ -309,20 +295,6 @@
 			<string>Glass navigation bar</string>
 			<key>key</key>
 			<string>glassNavigationBar</string>
-			<key>default</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>defaults</key>
-			<string>com.meowly.26settings</string>
-			<key>PostNotification</key>
-			<string>com.meowly.26settings.prefschanged</string>
-			<key>label</key>
-			<string>Circular back button</string>
-			<key>key</key>
-			<string>circularBackButton</string>
 			<key>default</key>
 			<true/>
 		</dict>

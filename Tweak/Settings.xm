@@ -46,7 +46,6 @@ static const NSInteger PSSwitchCell = 6;
 static const NSInteger kBannerTag = 26002;
 static char kNavBarStyledKey;
 static char kSpecifiersInjectedKey;
-static NSString *const kBackButtonBackdropName = @"MLY26BackBackdrop";
 
 #pragma mark - Small helpers
 
@@ -178,8 +177,6 @@ static void MLYRestyleIcon(UITableViewCell *cell) {
     MLYRoundContinuous(icon, radius,
                        kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner |
                            kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner);
-
-    if (prefs.glossyIcons && !prefs.tintedGlyphs) MLYApplyIconGloss(icon, radius);
 }
 
 #pragma mark - Navigation bar
@@ -201,41 +198,6 @@ static void MLYStyleNavigationBar(UINavigationBar *bar) {
     bar.standardAppearance = standard;
     bar.compactAppearance = standard;
     bar.scrollEdgeAppearance = scrollEdge;
-}
-
-/// iOS 26 wraps the back chevron in a circular piece of glass.
-static void MLYStyleBackButtons(UIView *root) {
-    for (UIView *subview in root.subviews) {
-        NSString *name = NSStringFromClass(subview.class);
-        BOOL isBarButton = [name containsString:@"ButtonBarButton"];
-        if (!isBarButton) {
-            MLYStyleBackButtons(subview);
-            continue;
-        }
-        if (CGRectGetWidth(subview.bounds) <= 0.0) continue;
-        if (CGRectGetMinX(subview.frame) > CGRectGetWidth(root.bounds) / 2.0) continue;
-
-        UIVisualEffectView *backdrop = nil;
-        for (UIView *candidate in subview.subviews) {
-            if ([candidate.accessibilityIdentifier isEqualToString:kBackButtonBackdropName]) {
-                backdrop = (UIVisualEffectView *)candidate;
-                break;
-            }
-        }
-        CGFloat diameter = MAX(32.0, CGRectGetHeight(subview.bounds));
-        if (!backdrop) {
-            backdrop = [[UIVisualEffectView alloc]
-                initWithEffect:[UIBlurEffect
-                                   effectWithStyle:UIBlurEffectStyleSystemThinMaterial]];
-            backdrop.accessibilityIdentifier = kBackButtonBackdropName;
-            backdrop.userInteractionEnabled = NO;
-            [subview insertSubview:backdrop atIndex:0];
-        }
-        backdrop.bounds = CGRectMake(0.0, 0.0, diameter, diameter);
-        backdrop.center = CGPointMake(CGRectGetMidX(subview.bounds), CGRectGetMidY(subview.bounds));
-        backdrop.layer.cornerRadius = diameter / 2.0;
-        backdrop.clipsToBounds = YES;
-    }
 }
 
 #pragma mark - Row / section metrics
@@ -269,6 +231,50 @@ static BOOL MLYSwizzle(Class cls, SEL selector, IMP replacement, IMP *original) 
     return YES;
 }
 
+#pragma mark - Table + banner installation
+
+static BOOL MLYIsRootPane(PSListController *controller) {
+    if ([controller specifier] != nil) return NO;
+    UINavigationController *nav = controller.navigationController;
+    return nav != nil && nav.viewControllers.firstObject == controller;
+}
+
+static void MLYStyleTable(PSListController *controller) {
+    UITableView *table = controller.table;
+    if (![table isKindOfClass:UITableView.class]) return;
+    if (!MLYPrefs.shared.cardStyle) return;
+
+    table.backgroundColor = UIColor.systemGroupedBackgroundColor;
+    table.separatorInset = UIEdgeInsetsMake(0.0, 58.0, 0.0, 0.0);
+    table.separatorColor = [UIColor.separatorColor colorWithAlphaComponent:0.25];
+}
+
+static void MLYInstallBanner(PSListController *controller) {
+    MLYPrefs *prefs = MLYPrefs.shared;
+    if (!prefs.banner || !MLYIsRootPane(controller)) return;
+
+    UITableView *table = controller.table;
+    if (![table isKindOfClass:UITableView.class]) return;
+
+    CGFloat width = CGRectGetWidth(table.bounds);
+    if (width <= 0.0) return;
+    CGFloat height = [MLYBannerView heightWithQuickGlance:prefs.quickGlance];
+
+    UIView *header = table.tableHeaderView;
+    if (header.tag == kBannerTag) {
+        if (CGRectGetWidth(header.bounds) == width) return;
+        header.frame = CGRectMake(0.0, 0.0, width, height);
+        table.tableHeaderView = header;
+        return;
+    }
+
+    MLYBannerView *banner =
+        [[MLYBannerView alloc] initWithFrame:CGRectMake(0.0, 0.0, width, height)
+                                 quickGlance:prefs.quickGlance];
+    banner.tag = kBannerTag;
+    table.tableHeaderView = banner;
+}
+
 #pragma mark - "Liquid Glass" pane (new in 26Settings)
 
 @interface MLYGlassPaneController : PSListController
@@ -299,8 +305,6 @@ static PSSpecifier *MLYSwitchSpecifier(NSString *name, NSString *key, id target)
                      forKey:@"footerText"];
     [specifiers addObject:appearance];
     [specifiers addObject:MLYSwitchSpecifier(@"Glass Navigation Bar", @"glassNavigationBar", self)];
-    [specifiers addObject:MLYSwitchSpecifier(@"Circular Back Button", @"circularBackButton", self)];
-    [specifiers addObject:MLYSwitchSpecifier(@"Glossy Icons", @"glossyIcons", self)];
     [specifiers addObject:MLYSwitchSpecifier(@"Clear Glyphs", @"tintedGlyphs", self)];
 
     PSSpecifier *banners = [PSSpecifier groupSpecifierWithName:@"Notifications"];
@@ -411,45 +415,32 @@ static PSSpecifier *MLYSwitchSpecifier(NSString *name, NSString *key, id target)
     if (!MLYActive()) return;
     MLYPrefs *prefs = MLYPrefs.shared;
     if (prefs.glassNavigationBar) MLYStyleNavigationBar(self);
-    if (prefs.circularBackButton) MLYStyleBackButtons(self);
 }
 
 %end
 
 %hook PSListController
 
-- (void)viewDidLoad {
+- (void)viewWillAppear:(BOOL)animated {
     %orig;
     if (!MLYActive()) return;
+    MLYStyleTable(self);
+    MLYInstallBanner(self);
+}
 
-    UITableView *table = self.table;
-    if (![table isKindOfClass:UITableView.class]) return;
-
-    MLYPrefs *prefs = MLYPrefs.shared;
-    if (prefs.cardStyle) {
-        table.backgroundColor = UIColor.systemGroupedBackgroundColor;
-        table.separatorInset = UIEdgeInsetsMake(0.0, 58.0, 0.0, 0.0);
-        table.separatorColor = [UIColor.separatorColor colorWithAlphaComponent:0.25];
-    }
-
-    // The account card only belongs on the root pane.
-    if (!prefs.banner) return;
-    if ([self specifier] != nil) return;
-    if (table.tableHeaderView.tag == kBannerTag) return;
-
-    MLYBannerView *banner = [[MLYBannerView alloc]
-        initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(table.bounds),
-                                 [MLYBannerView heightWithQuickGlance:prefs.quickGlance])
-          quickGlance:prefs.quickGlance];
-    banner.tag = kBannerTag;
-    table.tableHeaderView = banner;
+- (void)viewDidLayoutSubviews {
+    %orig;
+    if (!MLYActive()) return;
+    // The stock root pane assigns its own table header after the view loads, so
+    // the card is (re)installed on every layout pass rather than once.
+    MLYInstallBanner(self);
 }
 
 - (NSMutableArray *)specifiers {
     NSMutableArray *specifiers = %orig;
     if (!MLYActive() || !MLYPrefs.shared.glassPane) return specifiers;
     if (![NSThread isMainThread]) return specifiers;
-    if ([self specifier] != nil) return specifiers;
+    if (!MLYIsRootPane(self)) return specifiers;
     if (objc_getAssociatedObject(self, &kSpecifiersInjectedKey)) return specifiers;
     objc_setAssociatedObject(self, &kSpecifiersInjectedKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 

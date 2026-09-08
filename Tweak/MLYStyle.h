@@ -27,9 +27,6 @@ UIColor *MLYTintForRow(NSString *_Nullable identifier, NSString *_Nullable label
 UIImage *_Nullable MLYGlyphOverride(NSString *_Nullable identifier,
                                     NSString *_Nullable label);
 
-/// Adds (or reuses) the soft top-to-bottom gloss iOS 26 layers over its icons.
-void MLYApplyIconGloss(UIView *iconView, CGFloat radius);
-
 #ifdef __cplusplus
 }
 #endif

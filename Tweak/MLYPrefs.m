@@ -72,13 +72,11 @@ static void MLYPrefsDidChange(CFNotificationCenterRef center, void *observer,
 - (BOOL)sentenceCaseHeaders { return [self boolForKey:@"sentenceCaseHeaders" fallback:YES]; }
 - (BOOL)pillSearchBar { return [self boolForKey:@"pillSearchBar" fallback:YES]; }
 - (BOOL)glassNavigationBar { return [self boolForKey:@"glassNavigationBar" fallback:YES]; }
-- (BOOL)circularBackButton { return [self boolForKey:@"circularBackButton" fallback:YES]; }
 - (BOOL)biggerSwitches { return [self boolForKey:@"biggerSwitches" fallback:YES]; }
 
 - (BOOL)restyleIcons { return [self boolForKey:@"restyleIcons" fallback:YES]; }
 - (CGFloat)iconSize { return [self floatForKey:@"iconSize" fallback:29.0]; }
 - (CGFloat)iconRadius { return [self floatForKey:@"iconRadius" fallback:7.0]; }
-- (BOOL)glossyIcons { return [self boolForKey:@"glossyIcons" fallback:YES]; }
 - (BOOL)tintedGlyphs { return [self boolForKey:@"tintedGlyphs" fallback:NO]; }
 
 - (BOOL)banner { return [self boolForKey:@"banner" fallback:YES]; }

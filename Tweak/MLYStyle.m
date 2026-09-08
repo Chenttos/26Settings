@@ -149,33 +149,3 @@ UIImage *MLYGlyphOverride(NSString *identifier, NSString *label) {
     }
     return nil;
 }
-
-#pragma mark - Gloss
-
-void MLYApplyIconGloss(UIView *iconView, CGFloat radius) {
-    if (!iconView) return;
-
-    CAGradientLayer *gloss = nil;
-    for (CALayer *sublayer in iconView.layer.sublayers) {
-        if (sublayer.name && [sublayer.name isEqualToString:@"MLY26Gloss"]) {
-            gloss = (CAGradientLayer *)sublayer;
-            break;
-        }
-    }
-    if (!gloss) {
-        gloss = [CAGradientLayer layer];
-        gloss.name = @"MLY26Gloss";
-        gloss.colors = @[
-            (id)[UIColor colorWithWhite:1.0 alpha:0.30].CGColor,
-            (id)[UIColor colorWithWhite:1.0 alpha:0.06].CGColor,
-            (id)[UIColor colorWithWhite:0.0 alpha:0.06].CGColor
-        ];
-        gloss.locations = @[ @0.0, @0.55, @1.0 ];
-        gloss.startPoint = CGPointMake(0.5, 0.0);
-        gloss.endPoint = CGPointMake(0.5, 1.0);
-        [iconView.layer addSublayer:gloss];
-    }
-    gloss.frame = iconView.bounds;
-    gloss.cornerRadius = radius;
-    if (@available(iOS 13.0, *)) gloss.cornerCurve = kCACornerCurveContinuous;
-}
